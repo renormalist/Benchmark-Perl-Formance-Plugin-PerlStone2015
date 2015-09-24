@@ -1,0 +1,6 @@
+Revision history for {{$dist->name}}
+
+{{$NEXT}}
+        - a Benchmark::Perl::Formance plugin combining several benchmarks
+        - it consists of multiple sub-benchmarks which are aggregated into
+          a single result metric to be used for Perl speed comparisons

@@ -1,0 +1,5 @@
+.*
+!.gitignore
+Benchmark-Perl-Formance-Plugin-PerlStone2015-*
+Debian_CPANTS.txt
+nytprof*
