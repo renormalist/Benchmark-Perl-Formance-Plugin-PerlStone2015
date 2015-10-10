@@ -13,7 +13,6 @@ use warnings;
 #############################################################
 
 use Benchmark ':hireswallclock';
-use Data::Dumper;
 
 our $goal;
 our $count;
@@ -153,7 +152,6 @@ sub main
                 $results->{fieldsplitratio} = sprintf("%0.4f",$results->{fieldsplit1}{Benchmark}[1] / $results->{fieldsplit2}{Benchmark}[1]);
         };
 
-        print STDERR Dumper($results);
         if ($@) {
                 $results = { failed => $@ };
         }
