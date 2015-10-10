@@ -54,11 +54,25 @@ sub perlstone
         return \%results;
 }
 
+sub _aggregations
+{
+        my ($results, $options) = @_;
+
+        my @keys = keys %$results;
+        my $basemean = 1;
+        return {
+                basemean => { Benchmark => [ $basemean ] },
+               };
+}
+
 sub main
 {
         my ($options) = @_;
 
-        return perlstone($options);
+        my $results = perlstone($options);
+
+        $results->{perlstone} = _aggregations($results, $options);
+        return $results;
 }
 
 1; # End of Benchmark::Perl::Formance::Plugin::PerlStone2015
