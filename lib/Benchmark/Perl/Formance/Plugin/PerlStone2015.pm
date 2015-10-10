@@ -26,6 +26,7 @@ sub perlstone
                              # mandelbrot
         for my $subtest (qw( binarytrees
                              fasta
+                             regex
                              regexdna
                              nbody
                              revcomp
