@@ -2,10 +2,52 @@
 use 5.008;
 use strict;
 use warnings;
+
 package Benchmark::Perl::Formance::Plugin::PerlStone2015;
 # ABSTRACT: Benchmark::Perl::Formance plugin covering a representative set of sub benchmarks
 
 use Data::DPath 'dpath', 'dpathi';
+use Config;
+
+our @default_subtests = qw( binarytrees
+                            fasta
+                            regex
+
+                            regexdna
+                            nbody
+                            revcomp
+                            spectralnorm
+                            fib
+
+                            01overview
+                            02bits
+                            03operator
+                            04control
+                            05regex
+                            06subroutines
+                            07lists
+                            08capture
+                            09data
+                            10packages
+                            11modules
+                            12objects
+                            13overloading
+                            14tie
+                            15unicode
+                            16ioipc
+                            17concurrency
+                            18compiling
+                            19commandline
+                         );
+
+# Benchmarks using 'threads' can have an impact to programs running
+# after them, so push them to the end of the list to avoid confusion
+# as long as possible.
+if ($Config{usethreads}) {
+        push @default_subtests, (qw(fannkuch
+                                    mandelbrot
+                                  ));
+}
 
 sub perlstone
 {
@@ -13,22 +55,12 @@ sub perlstone
 
         no strict "refs"; ## no critic
 
-        my $verbose = $options->{verbose};
-        my %results = ();
-                             #
-                             # need threaded perl:
-                             # fannkuch
-                             # knucleotide
-                             # mandelbrot
-        for my $subtest (qw( binarytrees
-                             fasta
-                             regex
-                             regexdna
-                             nbody
-                             revcomp
-                             spectralnorm
-                             fib
-                          ))
+        my %results  = ();
+        my $verbose  = $options->{verbose};
+        my $subtests = $options->{subtests};
+        my @subtests = @$subtests ? @$subtests : @default_subtests;
+
+        for my $subtest (@subtests)
         {
                 print STDERR "#  - $subtest...\n" if $options->{verbose} > 2;
                 eval "use ".__PACKAGE__."::$subtest"; ## no critic
@@ -75,10 +107,14 @@ sub _aggregations
 {
         my ($results, $options) = @_;
 
-        my @keys = keys %$results;
-        my $basemean = 1;
+        my $sub_results = _find_sub_results($results);
+        use Data::Dumper;
+        #print STDERR "sub_results = ".Dumper($sub_results);
+
+        my $basemean = 1; # calculate this from normalized sub_results
         return {
-                basemean => { Benchmark => [ $basemean ] },
+                #basemean => { Benchmark => [ $basemean ] },
+                subresults => $sub_results,
                };
 }
 
@@ -97,6 +133,56 @@ sub main
 __END__
 
 =pod
+
+=head1 SYNOPSIS
+
+=head2 Run benchmarks via perlformance frontend
+
+ $ benchmark-perlformance -vv --plugin PerlStone2015
+
+=head2 Start raw without any tooling
+
+ $ perl -MData::Dumper -MBenchmark::Perl::Formance::Plugin::PerlStone2015 -e 'print Dumper(Benchmark::Perl::Formance::Plugin::PerlStone2015::main())'
+ $ perl -MData::Dumper -MBenchmark::Perl::Formance::Plugin::PerlStone2015 -e 'print Dumper(Benchmark::Perl::Formance::Plugin::PerlStone2015::main({verbose => 3, fastmode => 1})->{perlstone}{subresults})'
+ $ perl -MData::Dumper -MBenchmark::Perl::Formance::Plugin::PerlStone2015 -e 'print Dumper(Benchmark::Perl::Formance::Plugin::PerlStone2015::main({subtests => [qw(01overview regex)]})->{perlstone})'
+
+=head2 AVAILABLE SUB BENCHMARKS
+
+ binarytrees
+ fasta
+ regex
+
+ regexdna
+ nbody
+ revcomp
+ spectralnorm
+ fib
+
+ fannkuch                   # needs threaded perl
+ knucleotide                # needs threaded perl
+ mandelbrot                 # needs threaded perl
+
+ 01overview
+ 02bits                     # not yet implemented
+ 03operator                 # not yet implemented
+ 04control
+ 05regex
+ 06subroutines              # not yet implemented
+ 07lists                    # not yet implemented
+ 08capture                  # not yet implemented
+ 09data
+ 10packages                 # not yet implemented
+ 11modules                  # not yet implemented
+ 12objects                  # not yet implemented
+ 13overloading              # not yet implemented
+ 14tie                      # not yet implemented
+ 15unicode                  # not yet implemented
+ 16ioipc                    # not yet implemented
+ 17concurrency              # not yet implemented
+ 18compiling                # not yet implemented
+ 19commandline              # not yet implemented
+
+=head1 METHODS
 
 =head2 main
 

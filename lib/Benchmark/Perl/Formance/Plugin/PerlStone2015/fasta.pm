@@ -150,7 +150,7 @@ sub main
         my ($options) = @_;
 
         $PRINT     = $options->{print};
-        my $goal   = ($options->{fastmode} ? 20_000 : 5_000_000);
+        my $goal   = ($options->{fastmode} ? 200_000 : 1_000_000);
         my $count  = ($options->{fastmode} ? 1 : 5);
 
         my $result;

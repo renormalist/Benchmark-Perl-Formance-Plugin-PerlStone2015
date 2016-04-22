@@ -99,7 +99,7 @@ sub main
         my ($options) = @_;
 
         my $goal   = $options->{fastmode} ? "fasta-100000.txt" : "fasta-1000000.txt";
-        my $count  = $options->{fastmode} ? 1 : 5;
+        my $count  = $options->{fastmode} ? 5 : 10;
 
         my $result;
         my $t = timeit $count, sub { $result = run($goal) };

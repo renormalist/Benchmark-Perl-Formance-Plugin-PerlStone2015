@@ -90,7 +90,7 @@ sub main
 {
         my ($options) = @_;
 
-        my $goal   = $options->{fastmode} ? 10 : 15;
+        my $goal   = $options->{fastmode} ? 12 : 15;
         my $count  = $options->{fastmode} ?  1 :  5;
 
         my $result;

@@ -1,4 +1,4 @@
-package Benchmark::Perl::Formance::Plugin::PerlStone2015::perl09_data;
+package Benchmark::Perl::Formance::Plugin::PerlStone2015::09data;
 # ABSTRACT: benchmark - perl 09 - data
 
 use strict;
@@ -14,45 +14,45 @@ use Benchmark ':hireswallclock';
 
 my @stuff;
 
-sub array_alloc
+sub a_alloc
 {
-        my ($options, $goal, $count) = @_;
+        my ($options) = @_;
 
-        my $mygoal  = ($options->{fastmode} ? 10 : 1) * $goal;
-        my $mycount = ($options->{fastmode} ? 10 : 1) * $count;
+        my $goal   = $options->{fastmode} ? 10_000_000 : 20_000_000;
+        my $count  = $options->{fastmode} ?        154 : 950;
 
-        my $t = timeit $mycount, sub {
+        my $t = timeit $count, sub {
                 my @stuff1;
-                $#stuff1 = $mygoal;
+                $#stuff1 = $goal;
         };
         return {
                 Benchmark  => $t,
-                goal       => $mygoal,
-                count      => $mycount,
+                goal       => $goal,
+                count      => $count,
                };
 }
 
-sub array_copy
+sub a_copy
 {
-        my ($options, $goal, $count) = @_;
+        my ($options) = @_;
 
-        my $mygoal  = ($options->{fastmode} ? 10 : 1) * $goal;
-        my $mycount = ($options->{fastmode} ? 10 : 1) * $count;
+        my $goal   = $options->{fastmode} ? 10_000_000 : 20_000_000;
+        my $count  = $options->{fastmode} ?          6 : 38;
         my $size = 0;
 
         my @stuff;
-        $#stuff = $mygoal;
+        $#stuff = $goal;
 
         eval qq{use Devel::Size 'total_size'};
         $size = total_size(\@stuff) if !$@;
 
-        my $t = timeit $mycount, sub {
+        my $t = timeit $count, sub {
                 my @copy = @stuff;
         };
         return {
                 Benchmark        => $t,
-                goal             => $mygoal,
-                count            => $mycount,
+                goal             => $goal,
+                count            => $count,
                 total_size_bytes => $size,
                };
 }
@@ -61,18 +61,16 @@ sub main
 {
         my ($options) = @_;
 
-        my $goal   = $options->{fastmode} ? 2_000_000 : 15_000_000;
-        my $count  = $options->{fastmode} ? 5 : 20;
-
         my $results;
         eval {
                 $results = {
-                            array_alloc => array_alloc($options, $goal, $count),
-                            array_copy  => array_copy ($options, $goal, $count),
+                            a_alloc => a_alloc($options),
+                            a_copy  => a_copy ($options),
                            };
         };
 
         if ($@) {
+                warn $@ if $options->{verbose};
                 $results = { failed => $@ };
         }
 

@@ -28,8 +28,8 @@ sub main
 {
         my ($options) = @_;
 
-        # ensure same values over all Fib* plugins!
-        $goal  = $options->{fastmode} ? 20 : 35;
+        # ensure same values over all fib* plugins!
+        $goal  = $options->{fastmode} ? 28 : 35;
         $count = 5;
 
         my $result;

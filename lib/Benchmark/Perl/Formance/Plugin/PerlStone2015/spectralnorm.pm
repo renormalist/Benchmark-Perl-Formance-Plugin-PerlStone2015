@@ -22,7 +22,12 @@ use warnings;
 use IO::Select;
 use Benchmark ':hireswallclock';
 
-use vars qw($n $size_of_float $threads @ranges $begin $end);
+our $n;
+our $size_of_float;
+our $threads;
+our @ranges;
+our $begin;
+our $end;
 
 sub eval_A {
   use integer;
@@ -139,7 +144,7 @@ sub main
 {
         my ($options) = @_;
 
-        my $goal   = $options->{fastmode} ? 50 : 750;
+        my $goal   = $options->{fastmode} ? 250 : 750;
         my $count  = $options->{fastmode} ? 1   : 5;
 
         my $result;
