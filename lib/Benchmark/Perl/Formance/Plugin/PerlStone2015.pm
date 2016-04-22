@@ -58,7 +58,7 @@ sub perlstone
         my %results  = ();
         my $verbose  = $options->{verbose};
         my $subtests = $options->{subtests};
-        my @subtests = @$subtests ? @$subtests : @default_subtests;
+        my @subtests = scalar(@{$subtests||[]}) ? @{$subtests||[]} : @default_subtests;
 
         for my $subtest (@subtests)
         {
