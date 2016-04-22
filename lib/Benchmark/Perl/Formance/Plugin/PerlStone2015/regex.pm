@@ -162,6 +162,29 @@ sub code_literal
                };
 }
 
+# http://stackoverflow.com/questions/29217346/why-does-adding-one-more-alternative-make-my-regex-over-600-times-slower
+sub trie_limit
+{
+        my ($options) = @_;
+
+        my $goal   = $options->{fastmode} ? 16382 : 16383;
+        my $count  = $options->{fastmode} ? 1 : 5;
+
+        # things explode *after* $goal=16382
+        my @items = map unpack("H8", pack "V", $_), 0..30_000; # must be greater than $goal
+        my $nB = $goal;
+        my $reB = join "|", @items[1 .. $nB];
+        $reB = qr/^($reB)/;  # anchor and compile regex
+
+        my $counter;
+        my $t = timeit $count, sub { $nB == grep /$reB/, @items or die; };
+        return {
+                Benchmark => $t,
+                goal      => $goal,
+                count     => $count,
+               };
+}
+
 sub main
 {
         my ($options) = @_;
