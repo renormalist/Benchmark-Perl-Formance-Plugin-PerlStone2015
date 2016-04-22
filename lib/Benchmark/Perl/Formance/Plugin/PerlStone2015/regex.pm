@@ -193,18 +193,19 @@ sub main
 
         eval {
                 $results = {
-                            backtrack               => backtrack($options),
                             split1                  => split1($options),
                             split2                  => split2($options),
-                            precomp_access          => precomp_access($options),
+                            backtrack               => backtrack($options),
                             runtime_comp            => runtime_comp($options),
                             runtime_comp_nocache    => runtime_comp_nocache($options),
+                            precomp_access          => precomp_access($options),
                             code_runtime            => code_runtime($options),
                             code_literal            => code_literal($options),
+                            trie_limit              => trie_limit($options),
                            };
-                #my $splitratio = sprintf("%0.4f",$results->{split1}{Benchmark}[0] / $results->{split2}{Benchmark}[0]);
+                my $splitratio = $results->{split1}{Benchmark}[0] / $results->{split2}{Benchmark}[0];
                 # fake 'splitratio' as Benchmark.pm structure, just for symmetry
-                #$results->{splitratio} = {Benchmark => bless([ $splitratio, $splitratio, 0, 0, 0, $results->{split1}{count}], 'Benchmark')};
+                $results->{splitratio} = {Benchmark => bless([ $splitratio, $splitratio, 0, 0, 0, $results->{split1}{count}], 'Benchmark')};
         };
 
         if ($@) {
