@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+        - dist maintenance
 
 0.001     2016-04-23
         - a Benchmark::Perl::Formance plugin combining several benchmarks
