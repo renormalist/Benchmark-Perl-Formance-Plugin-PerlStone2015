@@ -159,7 +159,6 @@ __END__
  fib
 
  fannkuch                   # needs threaded perl
- knucleotide                # needs threaded perl
  mandelbrot                 # needs threaded perl
 
  01overview
@@ -168,7 +167,7 @@ __END__
  04control
  05regex
  06subroutines              # not yet implemented
- 07lists                    # not yet implemented
+ 07lists
  08capture                  # not yet implemented
  09data
  10packages                 # not yet implemented
